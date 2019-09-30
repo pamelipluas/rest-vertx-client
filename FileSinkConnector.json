@@ -1,0 +1,9 @@
+{
+    "name": "file-sink-connector",
+    "config": {
+        "connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+        "tasks.max": "10",
+        "topics": "test-topic",
+        "file": "/home/test.sink.txt"  
+    }
+}
