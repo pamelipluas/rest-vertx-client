@@ -7,11 +7,11 @@ import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.predicate.ResponsePredicate;
 import io.vertx.ext.web.codec.BodyCodec;
 
-public class PostCommand {
+public class CreateConnectorCommand {
     private HttpRequest<JsonObject> request;
     private Connector connector;
 
-    public PostCommand(String ip, Integer port, String path, Vertx vertx, Connector connector) {
+    public CreateConnectorCommand(String ip, Integer port, String path, Vertx vertx, Connector connector) {
         this.request = WebClient.create(vertx)
                 .post(port, ip, path)
                 .as(BodyCodec.jsonObject())
@@ -24,7 +24,7 @@ public class PostCommand {
     public void run () {
         this.request.sendJson(this.connector, asyncResult -> {
             if (asyncResult.succeeded()) {
-                System.out.println(asyncResult.result().body()); // (7)
+                System.out.println(asyncResult.result().body());
                 System.out.println();
             } else if(asyncResult.failed()) {
                 asyncResult.cause().printStackTrace();

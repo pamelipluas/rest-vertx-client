@@ -7,10 +7,10 @@ import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.predicate.ResponsePredicate;
 import io.vertx.ext.web.codec.BodyCodec;
 
-public class GetCommand {
+public class ListConnectorsCommand {
     private HttpRequest<JsonArray> request;
 
-    public GetCommand(String ip, Integer port, String path, Vertx vertx) {
+    public ListConnectorsCommand(String ip, Integer port, String path, Vertx vertx) {
         this.request = WebClient.create(vertx)
                 .get(port, ip, path)
                 .as(BodyCodec.jsonArray())
@@ -21,7 +21,7 @@ public class GetCommand {
     public void run () {
         this.request.send(asyncResult -> {
             if (asyncResult.succeeded()) {
-                System.out.println(asyncResult.result().body()); // (7)
+                System.out.println(asyncResult.result().body());
                 System.out.println();
             } else if(asyncResult.failed()) {
                 asyncResult.cause().printStackTrace();
