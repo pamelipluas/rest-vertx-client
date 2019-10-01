@@ -44,6 +44,11 @@
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -52,7 +57,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.5.0</version>
         <configuration>
-          <mainClass>io.vertx.howtos.httpclient.JokeVerticle</mainClass>
+          <mainClass>com.tw.App</mainClass>
         </configuration>
       </plugin>
     </plugins>
