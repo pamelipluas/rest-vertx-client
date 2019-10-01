@@ -11,17 +11,13 @@ public class CreateConnectorCommand extends AbstractVerticle {
     @Override
     public void start () {
         HttpRequest<JsonObject> request = WebClient.create(vertx)
-                .post(31918, "192.168.64.12", "/connectors")
+                .post(config().getInteger("port"), config().getString("ip"), config().getString("path"))
                 .as(BodyCodec.jsonObject())
                 .putHeader("Accept", "application/json")
                 .putHeader("Content-Type", "application/json")
                 .expect(ResponsePredicate.SC_CREATED);
-        Connector connector = new Connector("file-sink-connector3");
-        connector.addConfigItem("connector.class", "org.apache.kafka.connect.file.FileStreamSinkConnector");
-        connector.addConfigItem("tasks.max", "10");
-        connector.addConfigItem("topics", "test-topic");
-        connector.addConfigItem("file", "/home/test.sink.txt");
-        request.sendJson(connector, asyncResult -> {
+
+        request.sendJson(config().getJsonObject("connector"), asyncResult -> {
             if (asyncResult.succeeded()) {
                 System.out.println(asyncResult.result().body());
                 System.out.println();
