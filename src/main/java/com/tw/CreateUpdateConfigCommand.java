@@ -1,6 +1,6 @@
 package com.tw;
 
-import io.vertx.core.Vertx;
+import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.HttpResponse;
@@ -10,19 +10,8 @@ import io.vertx.ext.web.codec.BodyCodec;
 
 import java.util.function.Function;
 
-public class CreateUpdateConfigCommand {
+public class CreateUpdateConfigCommand extends AbstractVerticle {
     private HttpRequest<JsonObject> request;
-    private Connector connector;
-
-    public CreateUpdateConfigCommand(String ip, Integer port, String path, Vertx vertx, Connector connector) {
-        this.request = WebClient.create(vertx)
-                .put(port, ip, path + "/" + connector.getName() + "/config")
-                .as(BodyCodec.jsonObject())
-                .putHeader("Accept", "application/json")
-                .putHeader("Content-Type", "application/json")
-                .expect(methodsPredicate);
-        this.connector = connector;
-    }
 
     Function<HttpResponse<Void>, ResponsePredicateResult> methodsPredicate = resp -> {
         int statusCode = resp.statusCode();
@@ -32,15 +21,23 @@ public class CreateUpdateConfigCommand {
         return ResponsePredicateResult.failure("Does not work");
     };
 
-    public void run() {
-        this.request.sendJson(this.connector.getConfig(), asyncResult -> {
-            if (asyncResult.succeeded()) {
-                System.out.println(asyncResult.result().body());
-                System.out.println();
-            } else if (asyncResult.failed()) {
-                asyncResult.cause().printStackTrace();
-            }
-        });
+    @Override
+    public void start() {
+        WebClient.create(vertx)
+                .put(config().getInteger("port"), config().getString("ip"), config().getString("path") + "/"
+                        + config().getJsonObject("connector").getString("name") + "/config")
+                .as(BodyCodec.jsonObject())
+                .putHeader("Accept", "application/json")
+                .putHeader("Content-Type", "application/json")
+                .expect(methodsPredicate)
+                .sendJson(config().getJsonObject("connector").getJsonObject("config"), asyncResult -> {
+                    if (asyncResult.succeeded()) {
+                        System.out.println(asyncResult.result().body());
+                        System.out.println();
+                    } else if (asyncResult.failed()) {
+                        asyncResult.cause().printStackTrace();
+                    }
+                });
     }
 
 
