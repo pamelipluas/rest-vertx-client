@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 public class Deployer extends AbstractVerticle {
     @Override
     public void start() throws Exception {
+        System.out.println("Starting Deployer ...");
         JsonObject connectorConfigJson = new JsonObject().put("connector.class", "org.apache.kafka.connect.file.FileStreamSinkConnector")
                 .put("tasks.max", "10")
                 .put("topics", "test-topic")
